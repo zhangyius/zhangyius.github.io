@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GESP 3级：进制转换与位运算专项练习</title>
+    <style>
+        /* 全局重置与字体 */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f0f2f5;
+            color: #1f2937;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px 20px;
+        }
+
+        /* 主容器 */
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #ffffff;
+            padding: 50px;
+            border-radius: 24px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+
+        /* 标题设计 */
+        h1 {
+            text-align: center;
+            color: #111827;
+            font-size: 28px;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #6b7280;
+            margin-bottom: 40px;
+            font-size: 14px;
+        }
+
+        /* 计分板 */
+        .score-board {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .score-capsule {
+            display: inline-block;
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 18px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        /* 题目卡片 */
+        .question-card {
+            margin-bottom: 35px;
+            padding-bottom: 35px;
+            border-bottom: 1px solid #f3f4f6;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        .question-card:last-child {
+            border-bottom: none;
+        }
+
+        /* 标签 */
+        .tag {
+            display: inline-block;
+            background: #eff6ff;
+            color: #3b82f6;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+        }
+
+        .question-title {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 20px;
+            color: #1f2937;
+            line-height: 1.5;
+        }
+        
+        /* 代码块美化 */
+        code {
+            background-color: #f3f4f6;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: Consolas, Monaco, "Andale Mono", monospace;
+            color: #c2410c;
+            font-size: 0.95em;
+        }
+
+        /* 选项列表 */
+        .options {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            gap: 12px;
+        }
+
+        .option-item {
+            padding: 16px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            background: #fff;
+        }
+
+        /* 交互状态 */
+        .option-item:hover:not(.disabled) {
+            border-color: #3b82f6;
+            background-color: #eff6ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        .option-item.correct {
+            background-color: #ecfdf5;
+            border-color: #10b981;
+            color: #065f46;
+            font-weight: 600;
+        }
+        .option-item.correct::before {
+            content: "✓";
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .option-item.wrong {
+            background-color: #fef2f2;
+            border-color: #ef4444;
+            color: #991b1b;
+        }
+        .option-item.wrong::before {
+            content: "✕";
+            margin-right: 10px;
+            font-weight: bold;
+        }
+
+        .option-item.disabled {
+            cursor: default;
+            opacity: 0.8;
+            pointer-events: none;
+        }
+
+        /* 解析区域 */
+        .feedback {
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8fafc;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+            display: none;
+            font-size: 14px;
+            color: #475569;
+            animation: slideDown 0.3s ease-out;
+        }
+        .feedback strong {
+            color: #3b82f6;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        /* 动画 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-5px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 600px) {
+            .container { padding: 25px; }
+            h1 { font-size: 24px; }
+            .option-item { padding: 14px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>GESP 3级：进制转换与位运算</h1>
+    <div class="subtitle">10道精选题目 · 实时判分 · 详细解析</div>
+    
+    <div class="score-board">
+        <div class="score-capsule">
+            当前得分: <span id="currentScore">0</span> / 10
+        </div>
+    </div>
+    
+    <div id="quiz-container">
+        </div>
+</div>
+
+<script>
+    // 新生成的题目数据
+    const questions = [
+        {
+            id: 1,
+            type: "choice",
+            question: "将十进制数 29 转换为二进制数，结果是？",
+            options: [
+                { text: "11101", correct: true },
+                { text: "11110", correct: false },
+                { text: "10101", correct: false },
+                { text: "11011", correct: false }
+            ],
+            explanation: "29 = 16 + 8 + 4 + 1。对应的二进制权重位（16, 8, 4, 2, 1）为 11101。"
+        },
+        {
+            id: 2,
+            type: "choice",
+            question: "在 C++ 中，表达式 <code>(10 | 6)</code> 的值是多少？",
+            options: [
+                { text: "4", correct: false },
+                { text: "14", correct: true },
+                { text: "12", correct: false },
+                { text: "60", correct: false }
+            ],
+            explanation: "10 的二进制是 1010，6 的二进制是 0110。按位或(|)规则：有1为1。结果为 1110，即十进制 14。"
+        },
+        {
+            id: 3,
+            type: "choice",
+            question: "C++ 表达式 <code>(5 << 2)</code> 的值是多少？",
+            options: [
+                { text: "10", correct: false },
+                { text: "20", correct: true },
+                { text: "7", correct: false },
+                { text: "1", correct: false }
+            ],
+            explanation: "左移 n 位相当于乘以 2 的 n 次方。5 * (2^2) = 5 * 4 = 20。"
+        },
+        {
+            id: 4,
+            type: "choice",
+            question: "二进制数 <code>110110</code> 转换为八进制数是多少？",
+            options: [
+                { text: "66", correct: true },
+                { text: "36", correct: false },
+                { text: "54", correct: false },
+                { text: "D6", correct: false }
+            ],
+            explanation: "从右向左每三位一组转换为一位八进制数。110(2)=6(8)，所以结果是 66。"
+        },
+        {
+            id: 5,
+            type: "choice",
+            question: "在 C++ 中，以下哪个是十六进制数的正确表示方法？",
+            options: [
+                { text: "10A", correct: false },
+                { text: "0x10A", correct: true },
+                { text: "H10A", correct: false },
+                { text: "010A", correct: false }
+            ],
+            explanation: "C++ 中十六进制字面量使用 <code>0x</code> 或 <code>0X</code> 前缀。010A 看起来像八进制但包含了非法字符 A。"
+        },
+        {
+            id: 6,
+            type: "choice",
+            question: "表达式 <code>(12 ^ 12)</code> 的值是多少？",
+            options: [
+                { text: "24", correct: false },
+                { text: "144", correct: false },
+                { text: "12", correct: false },
+                { text: "0", correct: true }
+            ],
+            explanation: "异或运算(^)性质：任何数与自身异或，结果均为 0（因为每一位都相同，相同为0）。"
+        },
+        {
+            id: 7,
+            type: "choice",
+            question: "二进制数 <code>1010</code> 和 <code>0101</code> 进行按位与（<code>&</code>）运算的结果是多少？",
+            options: [
+                { text: "1111", correct: false },
+                { text: "1010", correct: false },
+                { text: "0000", correct: true },
+                { text: "0101", correct: false }
+            ],
+            explanation: "按位与(&)要求两位都为 1 结果才为 1。1010 和 0101 每一位都不重叠，结果为 0000。"
+        },
+        {
+            id: 8,
+            type: "judge",
+            question: "【判断题】在 C++ 代码中，<code>int a = 012;</code>，此时 <code>a</code> 的十进制值是 12。",
+            options: [
+                { text: "正确", correct: false },
+                { text: "错误", correct: true }
+            ],
+            explanation: "错误。前缀 <code>0</code> 表示八进制。八进制的 12 转换为十进制是 1×8 + 2 = 10。"
+        },
+        {
+            id: 9,
+            type: "judge",
+            question: "【判断题】对于正整数 <code>n</code>，表达式 <code>(n & 1) == 1</code> 可以用来判断 <code>n</code> 是否为奇数。",
+            options: [
+                { text: "正确", correct: true },
+                { text: "错误", correct: false }
+            ],
+            explanation: "正确。奇数的二进制最低位总是 1，(n & 1) 正好提取最低位。"
+        },
+        {
+            id: 10,
+            type: "judge",
+            question: "【判断题】将一个正整数右移 1 位（<code>>> 1</code>），在不溢出的情况下，相当于整除 2。",
+            options: [
+                { text: "正确", correct: true },
+                { text: "错误", correct: false }
+            ],
+            explanation: "正确。右移一位（丢弃最后一位）在数学上等同于除以 2 并向下取整。"
+        }
+    ];
+
+    let score = 0;
+    const container = document.getElementById('quiz-container');
+    const scoreSpan = document.getElementById('currentScore');
+
+    function renderQuestions() {
+        questions.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            
+            // 题目标签
+            const tag = document.createElement('span');
+            tag.className = 'tag';
+            tag.innerText = q.type === 'choice' ? '选择题' : '判断题';
+            
+            // 题目文本
+            const title = document.createElement('div');
+            title.className = 'question-title';
+            title.innerHTML = `${index + 1}. ${q.question}`;
+
+            // 选项容器
+            const optionsList = document.createElement('ul');
+            optionsList.className = 'options';
+
+            // 解析容器
+            const feedback = document.createElement('div');
+            feedback.className = 'feedback';
+            feedback.innerHTML = `<strong>💡 解析：</strong>${q.explanation}`;
+
+            // 生成选项
+            q.options.forEach(opt => {
+                const li = document.createElement('li');
+                li.className = 'option-item';
+                li.innerHTML = opt.text; 
+                
+                li.onclick = function() {
+                    // 防止重复点击
+                    if (card.classList.contains('answered')) return;
+                    card.classList.add('answered');
+
+                    // 禁用所有选项
+                    const allOptions = optionsList.querySelectorAll('.option-item');
+                    allOptions.forEach(item => item.classList.add('disabled'));
+
+                    // 判断对错
+                    if (opt.correct) {
+                        li.classList.add('correct');
+                        score++;
+                        scoreSpan.innerText = score;
+                    } else {
+                        li.classList.add('wrong');
+                        // 自动高亮正确答案
+                        allOptions.forEach((item, idx) => {
+                            if (q.options[idx].correct) {
+                                item.classList.add('correct');
+                            }
+                        });
+                    }
+                    // 显示解析
+                    feedback.style.display = 'block';
+                };
+                optionsList.appendChild(li);
+            });
+
+            card.appendChild(tag);
+            card.appendChild(title);
+            card.appendChild(optionsList);
+            card.appendChild(feedback);
+            container.appendChild(card);
+        });
+    }
+
+    renderQuestions();
+</script>
+
+</body>
+</html>
