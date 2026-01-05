@@ -1,0 +1,1074 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GESP 3级模拟测试9 - C++版</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            overflow: hidden;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eaeaea;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            background: linear-gradient(to right, #3498db, #2c3e50);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            color: #7f8c8d;
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+        
+        .exam-info {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+        }
+        
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin: 5px 10px;
+        }
+        
+        .info-item i {
+            color: #3498db;
+            margin-right: 8px;
+            font-size: 1.2rem;
+        }
+        
+        .knowledge-points {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .knowledge-points h3 {
+            color: #2c3e50;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .knowledge-points h3 i {
+            margin-right: 10px;
+            color: #3498db;
+        }
+        
+        .points-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .point-tag {
+            background-color: white;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            border: 1px solid #d1e7ff;
+            color: #2c3e50;
+        }
+        
+        .question-types {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #eaeaea;
+        }
+        
+        .type-btn {
+            padding: 12px 24px;
+            background: none;
+            border: none;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #7f8c8d;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .type-btn.active {
+            color: #3498db;
+        }
+        
+        .type-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: #3498db;
+            border-radius: 3px;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .question-container {
+            margin-bottom: 30px;
+        }
+        
+        .question {
+            background-color: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #3498db;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .question-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .question-number {
+            background-color: #3498db;
+            color: white;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        
+        .question-type {
+            background-color: #e3f2fd;
+            color: #1976d2;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .question-text {
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .options {
+            margin: 15px 0;
+        }
+        
+        .option {
+            display: block;
+            margin-bottom: 12px;
+            padding: 12px 15px;
+            background-color: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 1.05rem;
+            position: relative;
+        }
+        
+        .option:hover:not(.selected):not(.disabled) {
+            background-color: #f0f7ff;
+            border-color: #a0d2ff;
+        }
+        
+        .option.selected.correct {
+            background-color: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+            font-weight: 600;
+        }
+        
+        .option.selected.incorrect {
+            background-color: #ffebee;
+            border-color: #f44336;
+            color: #c62828;
+            font-weight: 600;
+        }
+        
+        .option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        
+        .option.correct-answer {
+            background-color: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
+            font-weight: 600;
+        }
+        
+        .true-false-options {
+            display: flex;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .true-false-options .option {
+            flex: 1;
+            text-align: center;
+        }
+        
+        .answer-section {
+            background-color: #f1f8e9;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            display: none;
+            border-left: 4px solid #7cb342;
+        }
+        
+        .answer-section.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        .answer-header {
+            font-weight: bold;
+            color: #689f38;
+            margin-bottom: 10px;
+            font-size: 1.2rem;
+        }
+        
+        .correct-answer {
+            color: #388e3c;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .explanation {
+            color: #555;
+            line-height: 1.7;
+        }
+        
+        .hint-btn {
+            background-color: #ff9800;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 15px;
+            transition: background-color 0.3s;
+        }
+        
+        .hint-btn:hover {
+            background-color: #f57c00;
+        }
+        
+        .hint-box {
+            background-color: #fff8e1;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 15px;
+            border-left: 4px solid #ffb300;
+            display: none;
+        }
+        
+        .hint-box.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        .hint-box h4 {
+            color: #ff8f00;
+            margin-bottom: 8px;
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        .stat {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+        
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+        
+        .reset-btn {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            display: block;
+            margin: 20px auto;
+            transition: background-color 0.3s;
+        }
+        
+        .reset-btn:hover {
+            background-color: #2980b9;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #95a5a6;
+            font-size: 0.9rem;
+            padding-top: 20px;
+            border-top: 1px solid #eaeaea;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .exam-info {
+                flex-direction: column;
+            }
+            
+            .question-types {
+                flex-wrap: wrap;
+            }
+            
+            .type-btn {
+                flex: 1;
+                min-width: 120px;
+            }
+            
+            .true-false-options {
+                flex-direction: column;
+            }
+            
+            .stats {
+                flex-wrap: wrap;
+            }
+            
+            .stat {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>GESP 3级模拟测试9 - C++版</h1>
+            <p class="subtitle">三级认证模拟 - 张一信奥日记</p>
+            <p>根据GESP 3级大纲设计，点击选项查看答案和解析</p>
+        </header>
+        
+        <div class="exam-info">
+            <div class="info-item">
+                <i class="fas fa-question-circle"></i>
+                <span>选择题: 15题</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-check-circle"></i>
+                <span>判断题: 10题</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-clock"></i>
+                <span>建议时间: 45分钟</span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-graduation-cap"></i>
+                <span>编程语言: C++</span>
+            </div>
+        </div>
+        
+        <div class="knowledge-points">
+            <h3><i class="fas fa-book-open"></i> GESP 3级知识要点（C++）</h3>
+            <div class="points-list">
+                <div class="point-tag">数据编码（原码、反码、补码）</div>
+                <div class="point-tag">进制转换</div>
+                <div class="point-tag">位运算（&、|、~、^、<<、>>）</div>
+                <div class="point-tag">算法概念与描述</div>
+                <div class="point-tag">C++一维数组</div>
+                <div class="point-tag">字符串处理</div>
+                <div class="point-tag">枚举算法</div>
+                <div class="point-tag">模拟算法</div>
+            </div>
+        </div>
+        
+        <div class="question-types">
+            <button class="type-btn active" data-type="multiple-choice">选择题 (15题)</button>
+            <button class="type-btn" data-type="true-false">判断题 (10题)</button>
+        </div>
+        
+        <div class="sections">
+            <!-- 选择题部分 -->
+            <div class="section active" id="multiple-choice">
+                <h2>选择题 (共15题，每题2分)</h2>
+                <p class="subtitle">从A、B、C、D四个选项中选择正确答案</p>
+                
+                <div class="question-container" id="multiple-choice-questions">
+                    <!-- 选择题将通过JS动态生成 -->
+                </div>
+            </div>
+            
+            <!-- 判断题部分 -->
+            <div class="section" id="true-false">
+                <h2>判断题 (共10题，每题1分)</h2>
+                <p class="subtitle">判断下列说法是否正确</p>
+                
+                <div class="question-container" id="true-false-questions">
+                    <!-- 判断题将通过JS动态生成 -->
+                </div>
+            </div>
+        </div>
+        
+        <button class="reset-btn" id="reset-test">
+            <i class="fas fa-redo"></i> 重新开始测试
+        </button>
+        
+        <div class="stats">
+            <div class="stat">
+                <div class="stat-value" id="total-questions">0</div>
+                <div class="stat-label">总题数</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="answered">0</div>
+                <div class="stat-label">已回答</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="correct">0</div>
+                <div class="stat-label">正确题数</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value" id="score">0</div>
+                <div class="stat-label">得分</div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2026 GESP模拟测试 | 根据GESP 3级大纲设计</p>
+            <p>提示：点击题目选项选择答案，系统会自动显示答案和解析</p>
+        </footer>
+    </div>
+
+    <script>
+        // 题库数据 - 根据GESP 3级大纲设计，纯C++内容
+        const questionsData = {
+    "multipleChoice": [
+        {
+            id: 1,
+            question: "十进制数-11的8位二进制补码表示是什么？",
+            options: ["11110101", "11110100", "10001011", "11111011"],
+            correctAnswer: 0,
+            explanation: "-11的8位二进制补码是11110101。计算过程：11的原码是00001011，反码是11110100，补码是反码加1得到11110101。",
+            hint: "负数的补码是其绝对值的原码取反后加1。"
+        },
+        {
+            id: 2,
+            question: "二进制数01101101转换为十六进制数是多少？",
+            options: ["6D", "7D", "6C", "7C"],
+            correctAnswer: 0,
+            explanation: "二进制01101101分组为0110和1101，0110对应十六进制6，1101对应D，所以结果是6D。",
+            hint: "每4位二进制数对应1位十六进制数。"
+        },
+        {
+            id: 3,
+            question: "表达式(27 & 18)的结果是多少？",
+            options: ["18", "17", "16", "15"],
+            correctAnswer: 0,
+            explanation: "按位与运算：11011 & 10010 = 10010，即十进制18。",
+            hint: "按位与运算：两位都为1时结果才为1。"
+        },
+        {
+            id: 4,
+            question: "在C++中，下列哪个数组声明和初始化是正确的？",
+            options: ["char str[] = \"hello\";", "char str[5] = \"hello\";", "char str[];", "char str = \"hello\";"],
+            correctAnswer: 0,
+            explanation: "char str[] = \"hello\";是正确的，编译器会自动推断数组大小（包括结束符'\\0'）。",
+            hint: "字符数组初始化的正确语法。"
+        },
+        {
+            id: 5,
+            question: "表达式(22 | 13)的结果是多少？",
+            options: ["31", "22", "13", "27"],
+            correctAnswer: 0,
+            explanation: "按位或运算：10110 | 01101 = 11111，即十进制31。",
+            hint: "按位或运算：只要有一位为1，结果就为1。"
+        },
+        {
+            id: 6,
+            question: "十六进制数8F转换为十进制数是多少？",
+            options: ["143", "144", "142", "145"],
+            correctAnswer: 0,
+            explanation: "8F(16) = 8×16 + 15 = 128 + 15 = 143。",
+            hint: "十六进制转十进制：每一位乘以16的相应次方后求和。"
+        },
+        {
+            id: 7,
+            question: "在C++中，下列哪个函数用于比较两个字符串的前n个字符？",
+            options: ["strncmp()", "strcmp()", "strcpy()", "strcat()"],
+            correctAnswer: 0,
+            explanation: "strncmp()函数用于比较两个字符串的前n个字符。",
+            hint: "带长度限制的字符串比较函数。"
+        },
+        {
+            id: 8,
+            question: "表达式(19 ^ 12)的结果是多少？",
+            options: ["31", "30", "29", "28"],
+            correctAnswer: 0,
+            explanation: "按位异或运算：10011 ^ 01100 = 11111，即十进制31。",
+            hint: "按位异或：相同为0，不同为1。"
+        },
+        {
+            id: 9,
+            question: "在C++中，下列哪个头文件包含了字符分类函数？",
+            options: ["<cctype>", "<cstring>", "<iostream>", "<cstdio>"],
+            correctAnswer: 0,
+            explanation: "<cctype>头文件包含了字符分类函数，如isalpha()、isdigit()、isupper()等。",
+            hint: "字符处理函数的头文件。"
+        },
+        {
+            id: 10,
+            question: "表达式(~0)的结果是多少？(假设8位表示)",
+            options: ["255", "0", "1", "256"],
+            correctAnswer: 0,
+            explanation: "0的二进制是00000000，按位取反得到11111111，转换为十进制是255（无符号解释）。",
+            hint: "按位取反运算：所有位取反，0变1，1变0。"
+        },
+        {
+            id: 11,
+            question: "八进制数100转换为二进制数是多少？",
+            options: ["1000000", "100000", "10000", "1000"],
+            correctAnswer: 0,
+            explanation: "八进制1对应二进制001，八进制0对应二进制000，八进制0对应二进制000，所以100(8) = 001000000，去掉前导0得到1000000。",
+            hint: "每位八进制数对应3位二进制数。"
+        },
+        {
+            id: 12,
+            question: "在算法描述中，流程图中的菱形框表示什么？",
+            options: ["判断/决策", "处理/操作", "开始/结束", "输入/输出"],
+            correctAnswer: 0,
+            explanation: "流程图中，菱形框表示判断或决策，通常有一个入口和两个出口（是/否）。",
+            hint: "流程图的符号含义。"
+        },
+        {
+            id: 13,
+            question: "表达式(7 >> 1)的结果是多少？",
+            options: ["3", "4", "2", "1"],
+            correctAnswer: 0,
+            explanation: "右移1位相当于整除2，7 >> 1 = 7 ÷ 2 = 3（向下取整）。",
+            hint: "右移n位相当于整除2的n次方。"
+        },
+        {
+            id: 14,
+            question: "在C++中，下列哪个函数用于比较内存块？",
+            options: ["memcmp()", "strcmp()", "strncmp()", "strcpy()"],
+            correctAnswer: 0,
+            explanation: "memcmp()函数用于比较两个内存块的内容。",
+            hint: "内存比较函数。"
+        },
+        {
+            id: 15,
+            question: "十进制数100转换为二进制数是多少？",
+            options: ["1100100", "1100101", "1100110", "1100011"],
+            correctAnswer: 0,
+            explanation: "100转换为二进制是1100100。计算过程：100 ÷ 2 = 50 余 0，50 ÷ 2 = 25 余 0，25 ÷ 2 = 12 余 1，12 ÷ 2 = 6 余 0，6 ÷ 2 = 3 余 0，3 ÷ 2 = 1 余 1，1 ÷ 2 = 0 余 1，从下往上读取余数得到1100100。",
+            hint: "十进制转二进制：除以2取余数，倒序排列。"
+        }
+    ],
+    "trueFalse": [
+        {
+            id: 1,
+            question: "补码表示方便进行加减运算。",
+            correctAnswer: true,
+            explanation: "正确。补码表示方便进行加减运算，因为可以使用相同的加法电路处理正负数。",
+            hint: "补码表示的优点。"
+        },
+        {
+            id: 2,
+            question: "二进制数111111转换为十进制数是63。",
+            correctAnswer: true,
+            explanation: "正确。二进制111111转换为十进制是：1×2⁵ + 1×2⁴ + 1×2³ + 1×2² + 1×2¹ + 1×2⁰ = 32 + 16 + 8 + 4 + 2 + 1 = 63。",
+            hint: "二进制转十进制：每位乘以2的相应次方后求和。"
+        },
+        {
+            id: 3,
+            question: "按位与运算符(&)的优先级高于按位或运算符(|)。",
+            correctAnswer: true,
+            explanation: "正确。在C++中，按位与运算符(&)的优先级高于按位或运算符(|)。",
+            hint: "位运算符的优先级顺序。"
+        },
+        {
+            id: 4,
+            question: "在C++中，可以使用sizeof()运算符获取数组的总字节数。",
+            correctAnswer: true,
+            explanation: "正确。sizeof(arr)返回数组arr的总字节数。",
+            hint: "sizeof()运算符的用法。"
+        },
+        {
+            id: 5,
+            question: "枚举算法可以用于解决排列组合问题。",
+            correctAnswer: true,
+            explanation: "正确。枚举算法常用于解决排列组合问题，通过遍历所有可能的排列或组合来寻找解。",
+            hint: "枚举算法的应用场景。"
+        },
+        {
+            id: 6,
+            question: "十六进制数C8的十进制表示是200。",
+            correctAnswer: true,
+            explanation: "正确。十六进制C8转换为十进制：12×16 + 8 = 192 + 8 = 200。",
+            hint: "十六进制转十进制计算。"
+        },
+        {
+            id: 7,
+            question: "在C++中，strcpy()函数会复制源字符串的结束符'\\0'。",
+            correctAnswer: true,
+            explanation: "正确。strcpy()函数会复制源字符串的结束符'\\0'到目标字符串。",
+            hint: "strcpy()函数的字符串处理。"
+        },
+        {
+            id: 8,
+            question: "在C++中，数组的越界访问不会导致编译错误，但可能导致运行时错误。",
+            correctAnswer: true,
+            explanation: "正确。数组越界访问在编译时不会报错，但可能导致运行时错误（如段错误）或未定义行为。",
+            hint: "数组越界访问的后果。"
+        },
+        {
+            id: 9,
+            question: "模拟算法通常需要处理事件队列。",
+            correctAnswer: true,
+            explanation: "正确。离散事件模拟算法通常需要维护一个事件队列，按时间顺序处理事件。",
+            hint: "模拟算法的实现机制。"
+        },
+        {
+            id: 10,
+            question: "在C++中，可以使用一维数组模拟多维数组。",
+            correctAnswer: true,
+            explanation: "正确。可以使用一维数组模拟多维数组，如arr[row*cols+col]访问第row行第col列的元素。",
+            hint: "数组的灵活使用。"
+        }
+    ]
+};
+
+        // 存储处理后的题目数据（包含随机排序的选项）
+        let questions = {
+            multipleChoice: [],
+            trueFalse: []
+        };
+
+        // 用户答案存储
+        let userAnswers = {
+            multipleChoice: new Array(questionsData.multipleChoice.length).fill(null),
+            trueFalse: new Array(questionsData.trueFalse.length).fill(null)
+        };
+
+        // 初始化页面
+        document.addEventListener('DOMContentLoaded', function() {
+            initializeQuestions();
+            renderQuestions();
+            updateStats();
+            setupEventListeners();
+        });
+
+        // 初始化题目数据，随机排序选择题选项
+        function initializeQuestions() {
+            // 处理选择题，随机排序选项
+            questions.multipleChoice = questionsData.multipleChoice.map(q => {
+                // 创建选项和索引的数组，并对选项文本进行HTML转义
+                const optionsWithIndices = q.options.map((option, index) => ({
+                    option: escapeHtml(option),  // 转义HTML特殊字符
+                    originalIndex: index
+                }));
+                
+                // 随机排序选项
+                const shuffledOptions = shuffleArray([...optionsWithIndices]);
+                
+                // 找到正确选项在新数组中的位置
+                const newCorrectIndex = shuffledOptions.findIndex(item => item.originalIndex === q.correctAnswer);
+                
+                // 返回新的题目对象
+                return {
+                    ...q,
+                    shuffledOptions: shuffledOptions.map(item => item.option),
+                    correctAnswer: newCorrectIndex, // 更新正确选项索引
+                    originalCorrectAnswer: q.correctAnswer // 保留原始正确选项索引
+                };
+            });
+
+            // 判断题不需要随机排序
+            questions.trueFalse = questionsData.trueFalse;
+        }
+
+        // 添加HTML转义函数
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        // 随机打乱数组（Fisher-Yates洗牌算法）
+        function shuffleArray(array) {
+            const newArray = [...array];
+            for (let i = newArray.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+            }
+            return newArray;
+        }
+
+        // 渲染所有题目
+        function renderQuestions() {
+            // 渲染选择题
+            const mcContainer = document.getElementById('multiple-choice-questions');
+            mcContainer.innerHTML = '';
+            
+            questions.multipleChoice.forEach((q, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+                
+                // 对选项文本进行HTML转义处理
+                const escapedOptions = q.options.map(option => 
+                    option.replace(/</g, '&lt;').replace(/>/g, '&gt;')
+                );
+                
+                // 在renderQuestions函数中修改选择题渲染部分
+                questionElement.innerHTML = `
+                    <div class="question-header">
+                        <div class="question-number">${q.id}</div>
+                        <div class="question-type">选择题</div>
+                    </div>
+                    <div class="question-text">${escapeHtml(q.question)}</div>
+                    <div class="options" data-question-id="${q.id}">
+                        ${q.shuffledOptions.map((option, optIndex) => `
+                            <div class="option" data-question-id="${q.id}" data-option-index="${optIndex}">
+                                ${String.fromCharCode(65 + optIndex)}. ${option}  <!-- 这里option已经是转义后的文本 -->
+                            </div>
+                        `).join('')}
+                    </div>
+                    <button class="hint-btn">
+                        <i class="fas fa-lightbulb"></i> 显示提示
+                    </button>
+                    <div class="hint-box">
+                        <h4>提示：</h4>
+                        <p>${escapeHtml(q.hint)}</p>
+                    </div>
+                    <div class="answer-section">
+                        <div class="answer-header">答案与解析</div>
+                        <div class="correct-answer">正确答案：${String.fromCharCode(65 + q.correctAnswer)}. ${q.shuffledOptions[q.correctAnswer]}</div>
+                        <div class="explanation">${escapeHtml(q.explanation)}</div>
+                    </div>
+                `;
+                mcContainer.appendChild(questionElement);
+                
+                // 如果已经回答过，恢复状态
+                if (userAnswers.multipleChoice[index] !== null) {
+                    restoreQuestionState(questionElement, q.id, index, 'multipleChoice');
+                }
+            });
+
+            // 渲染判断题
+            const tfContainer = document.getElementById('true-false-questions');
+            tfContainer.innerHTML = '';
+            
+            questions.trueFalse.forEach((q, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+                questionElement.innerHTML = `
+                    <div class="question-header">
+                        <div class="question-number">${q.id}</div>
+                        <div class="question-type">判断题</div>
+                    </div>
+                    <div class="question-text">${q.question}</div>
+                    <div class="true-false-options" data-question-id="${q.id}">
+                        <div class="option" data-question-id="${q.id}" data-option-index="0">正确</div>
+                        <div class="option" data-question-id="${q.id}" data-option-index="1">错误</div>
+                    </div>
+                    <button class="hint-btn">
+                        <i class="fas fa-lightbulb"></i> 显示提示
+                    </button>
+                    <div class="hint-box">
+                        <h4>提示：</h4>
+                        <p>${q.hint}</p>
+                    </div>
+                    <div class="answer-section">
+                        <div class="answer-header">答案与解析</div>
+                        <div class="correct-answer">正确答案：${q.correctAnswer ? '正确' : '错误'}</div>
+                        <div class="explanation">${q.explanation}</div>
+                    </div>
+                `;
+                tfContainer.appendChild(questionElement);
+                
+                // 如果已经回答过，恢复状态
+                if (userAnswers.trueFalse[index] !== null) {
+                    restoreQuestionState(questionElement, q.id, index, 'trueFalse');
+                }
+            });
+        }
+
+        // 恢复题目状态（用于重新渲染时保持已答状态）
+        function restoreQuestionState(questionElement, questionId, questionIndex, questionType) {
+            const userAnswer = userAnswers[questionType][questionIndex];
+            const options = questionElement.querySelectorAll('.option');
+            const correctAnswer = questionType === 'multipleChoice' 
+                ? questions.multipleChoice[questionIndex].correctAnswer
+                : questions.trueFalse[questionIndex].correctAnswer ? 0 : 1;
+            
+            // 禁用所有选项
+            options.forEach(opt => {
+                opt.classList.add('disabled');
+            });
+            
+            // 标记用户选择的选项
+            if (userAnswer !== null) {
+                const userOption = options[userAnswer];
+                userOption.classList.add('selected');
+                
+                // 根据是否正确添加样式
+                if (userAnswer === correctAnswer) {
+                    userOption.classList.add('correct');
+                } else {
+                    userOption.classList.add('incorrect');
+                    // 显示正确答案
+                    const correctOption = options[correctAnswer];
+                    correctOption.classList.add('correct-answer');
+                }
+                
+                // 显示答案和解析
+                const answerSection = questionElement.querySelector('.answer-section');
+                answerSection.classList.add('show');
+            }
+        }
+
+        // 设置事件监听器
+        function setupEventListeners() {
+            // 题目类型切换
+            document.querySelectorAll('.type-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const type = this.getAttribute('data-type');
+                    
+                    // 更新按钮状态
+                    document.querySelectorAll('.type-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // 显示对应部分
+                    document.querySelectorAll('.section').forEach(section => {
+                        section.classList.remove('active');
+                    });
+                    document.getElementById(type).classList.add('active');
+                    
+                    updateStats();
+                });
+            });
+
+            // 选择题选项点击
+            document.addEventListener('click', function(e) {
+                // 选择题选项点击
+                if (e.target.classList.contains('option') && !e.target.classList.contains('disabled')) {
+                    const questionId = parseInt(e.target.getAttribute('data-question-id'));
+                    const optionIndex = parseInt(e.target.getAttribute('data-option-index'));
+                    
+                    // 确定题目类型
+                    let questionType, questionIndex;
+                    if (document.getElementById('multiple-choice').classList.contains('active')) {
+                        questionType = 'multipleChoice';
+                        questionIndex = questionId - 1;
+                    } else {
+                        questionType = 'trueFalse';
+                        questionIndex = questionId - 1;
+                    }
+                    
+                    // 如果已经回答过，不允许修改
+                    if (userAnswers[questionType][questionIndex] !== null) {
+                        return;
+                    }
+                    
+                    // 保存用户答案
+                    userAnswers[questionType][questionIndex] = optionIndex;
+                    
+                    // 获取正确答案
+                    const correctAnswer = questionType === 'multipleChoice' 
+                        ? questions.multipleChoice[questionIndex].correctAnswer
+                        : questions.trueFalse[questionIndex].correctAnswer ? 0 : 1;
+                    
+                    // 获取题目元素
+                    const questionElement = e.target.closest('.question');
+                    const options = questionElement.querySelectorAll('.option');
+                    
+                    // 禁用所有选项
+                    options.forEach(opt => {
+                        opt.classList.add('disabled');
+                    });
+                    
+                    // 标记当前选项为选中
+                    e.target.classList.add('selected');
+                    
+                    // 根据是否正确添加样式
+                    if (optionIndex === correctAnswer) {
+                        e.target.classList.add('correct');
+                    } else {
+                        e.target.classList.add('incorrect');
+                        // 显示正确答案
+                        const correctOption = options[correctAnswer];
+                        correctOption.classList.add('correct-answer');
+                    }
+                    
+                    // 显示答案和解析
+                    const answerSection = questionElement.querySelector('.answer-section');
+                    answerSection.classList.add('show');
+                    
+                    updateStats();
+                }
+                
+                // 提示按钮点击
+                if (e.target.classList.contains('hint-btn') || e.target.closest('.hint-btn')) {
+                    const hintBtn = e.target.classList.contains('hint-btn') ? e.target : e.target.closest('.hint-btn');
+                    const questionElement = hintBtn.closest('.question');
+                    const hintBox = questionElement.querySelector('.hint-box');
+                    hintBox.classList.toggle('show');
+                    
+                    // 更新按钮文本
+                    if (hintBox.classList.contains('show')) {
+                        hintBtn.innerHTML = '<i class="fas fa-eye-slash"></i> 隐藏提示';
+                    } else {
+                        hintBtn.innerHTML = '<i class="fas fa-lightbulb"></i> 显示提示';
+                    }
+                }
+            });
+
+            // 重置测试按钮
+            document.getElementById('reset-test').addEventListener('click', function() {
+                if (confirm('确定要重新开始测试吗？这将清除所有答题记录。')) {
+                    // 重置用户答案
+                    userAnswers = {
+                        multipleChoice: new Array(questionsData.multipleChoice.length).fill(null),
+                        trueFalse: new Array(questionsData.trueFalse.length).fill(null)
+                    };
+                    
+                    // 重新初始化题目（重新随机排序选项）
+                    initializeQuestions();
+                    
+                    // 重新渲染题目
+                    renderQuestions();
+                    
+                    // 更新统计
+                    updateStats();
+                    
+                    alert('测试已重置，可以重新开始答题。');
+                }
+            });
+        }
+
+        // 更新统计数据
+        function updateStats() {
+            let totalQuestions = 0;
+            let answered = 0;
+            let correct = 0;
+            let score = 0;
+            
+            // 计算选择题数据
+            userAnswers.multipleChoice.forEach((answer, index) => {
+                totalQuestions++;
+                if (answer !== null) {
+                    answered++;
+                    if (answer === questions.multipleChoice[index].correctAnswer) {
+                        correct++;
+                        score += 2; // 选择题每题2分
+                    }
+                }
+            });
+            
+            // 计算判断题数据
+            userAnswers.trueFalse.forEach((answer, index) => {
+                totalQuestions++;
+                if (answer !== null) {
+                    answered++;
+                    const correctBool = questions.trueFalse[index].correctAnswer;
+                    const userBool = answer === 0; // 0表示"正确"，1表示"错误"
+                    
+                    if (userBool === correctBool) {
+                        correct++;
+                        score += 1; // 判断题每题1分
+                    }
+                }
+            });
+            
+            // 更新显示
+            document.getElementById('total-questions').textContent = totalQuestions;
+            document.getElementById('answered').textContent = answered;
+            document.getElementById('correct').textContent = correct;
+            document.getElementById('score').textContent = score;
+        }
+    </script>
+</body>
+</html>
