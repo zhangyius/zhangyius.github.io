@@ -479,7 +479,7 @@
             
             <!-- 判断题部分 -->
             <div class="section" id="true-false">
-                <h2>判断题 (共10题，每题1分)</h2>
+                <h2>判断题 (共10题，每题2分)</h2>
                 <p class="subtitle">判断下列说法是否正确</p>
                 
                 <div class="question-container" id="true-false-questions">
@@ -660,8 +660,8 @@
                 {
                     id: 3,
                     question: "按位异或运算符(^)的优先级高于按位或运算符(|)。",
-                    correctAnswer: false,
-                    explanation: "错误。在C++中，按位异或(^)和按位或(|)的优先级不同，但按位与(&)的优先级高于按位异或(^)，按位异或(^)的优先级高于按位或(|)。更准确地说，按位异或的优先级低于按位与但高于按位或。",
+                    correctAnswer: true,
+                    explanation: "正确。在C++中，按位与(&)的优先级高于按位异或(^)，按位异或(^)的优先级高于按位或(|)。",
                     hint: "C++位运算符的优先级顺序。"
                 },
                 {
@@ -1039,7 +1039,7 @@
                     
                     if (userBool === correctBool) {
                         correct++;
-                        score += 1; // 判断题每题1分
+                        score += 2; // 判断题每题1分
                     }
                 }
             });
